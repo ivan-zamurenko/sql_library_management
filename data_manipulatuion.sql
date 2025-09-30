@@ -62,6 +62,8 @@ Having count(*) > 1                                     --?> 8 employees have be
 
 --!> 2. CTAS operations (Create Table As Select)
     --!> 2.1  Generate new tables based on query results - each book and total book_issued_count
+    Drop Table is EXISTS book_issued_count
+    
     Create Table book_issued_count as (
         Select
             b.isbn
