@@ -46,3 +46,24 @@ Select
 From employees emp
 Join branch b On emp.branch_id = b.branch_id
 Join employees emp2 On emp2.emp_id = b.manager_id
+
+    
+--!> 5. Create a table of books with rental price above a certain thresh hold (5$)
+Create Table expensive_books as (
+    Select * From books
+    Where rental_price > 5.5
+)
+
+Select * From expensive_books
+
+
+--!> 6. Retrieve the list of books which do not returned yet
+Select 
+    DISTINCT b.isbn
+    , b.book_title
+    , b.author
+    , b.category
+From issued_status iss
+Join books b On iss.issued_book_isbn = b.isbn
+Left Join return_status rs On iss.issued_id = rs.issued_id
+Where rs.issued_id is NULL
