@@ -155,4 +155,40 @@ Select *
 From fines
 
 
---!> 9.
+
+--!> 9. Create a query that generates a performance report for each branch, showing the number of books issued, the number of books returned, and the total revenue generated from book rentals.
+With issued_books_list as (
+    Select
+        b.branch_id
+        , iss.issued_id
+        , iss.issued_book_isbn
+    From branch b
+    Join employees e On e.branch_id = b.branch_id
+    Join issued_status iss on e.emp_id = iss.issued_emp_id
+)
+, returned_books as (
+    Select 
+        ibl.branch_id
+        , ibl.issued_id
+        , ibl.issued_book_isbn
+        , CASE 
+            WHEN rs.issued_id IS NOT NULL THEN TRUE
+            ELSE False
+        END as returned_book
+    From issued_books_list ibl
+    Left Join return_status rs On rs.issued_id = ibl.issued_id
+)
+, total_revenue as (
+    Select
+        rb.branch_id
+        , count(*) as books_issued
+        , count(*) FILTER (WHERE rb.returned_book = TRUE) as books_returned
+        , count(*) FILTER (Where rb.returned_book = FALSE) as books_not_returned
+        , sum(b.rental_price) FILTER (WHERE rb.returned_book = TRUE) as revenue
+    From returned_books rb
+    Join books b on b.isbn = rb.issued_book_isbn
+    Group By rb.branch_id
+    Order By rb.branch_id
+)
+Select *
+From total_revenue
