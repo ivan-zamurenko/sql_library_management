@@ -192,3 +192,18 @@ With issued_books_list as (
 )
 Select *
 From total_revenue
+
+
+--!> 10. Create a table of active members. Members who have issued at least one book in the few weeks
+Create Table active_members as(
+    Select *
+    From members
+    Where member_id In (
+        Select
+            DISTINCT issued_member_id
+        From issued_status
+        Where issued_date Between '2024-03-01' AND '2024-03-21'
+    )
+)
+Select *
+From active_members
