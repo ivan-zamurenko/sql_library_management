@@ -207,3 +207,91 @@ Create Table active_members as(
 )
 Select *
 From active_members
+
+
+--!> 11. Write a query to find TOP-3 employee who have issued at least three book
+Select
+    e.emp_id
+    , count(*) as books_issued
+    , sum(b.rental_price) as total_revenue
+From employees e
+Join issued_status iss On iss.issued_emp_id = e.emp_id
+Join books b on b.isbn = iss.issued_book_isbn
+Group By e.emp_id
+Having count(*) >= 2
+Order by sum(b.rental_price) DESC
+Limit 3
+
+
+/*--!> 12. Complex task
+--!> Description: Write a stored procedure that updates the status of a book in the library based on its issuance. 
+--!> The procedure should function as follows: 
+--!> The stored procedure should take the book_id as an input parameter. 
+--!> The procedure should first check if the book is available (status = 'yes'). 
+--!> If the book is available, it should be issued, and the status in the books table should be updated to 'no'. 
+--!> If the book is not available (status = 'no'), the procedure should return an error message indicating that the book is currently not available.
+*/
+
+Select * From books
+
+Select * From issued_status
+
+
+--?> Create the procedure
+Create or Replace Procedure issue_a_book(
+    p_issued_id varchar(15)
+    , p_issued_member_id varchar(15)
+    , p_book_id varchar(30)
+    , p_emp_id varchar(15))
+Language plpgsql
+AS $$
+Declare
+    book_id varchar(30);
+    book_title text;
+    book_status text;
+Begin
+    --?> Logic is here
+    Select
+        b.isbn
+        , b.book_title
+        , b.status
+    Into book_id, book_title, book_status
+    From books b
+    Where b.isbn = p_book_id;
+    
+    --?> Conditional output
+    IF book_status = 'yes' Then
+        RAISE NOTICE 'Id: %, Book: % -> Is available and now will be issued!', book_id, book_title;
+
+        --?> Insert a new issue row
+        Insert Into issued_status(
+            issued_id
+            , issued_member_id
+            , issued_book_name
+            , issued_date
+            , issued_book_isbn
+            , issued_emp_id)
+        Values(
+            p_issued_id
+            , p_issued_member_id
+            , book_title
+            , CURRENT_DATE
+            , book_id
+            , p_emp_id);
+
+        --?> Mark book as issued (status = 'no')
+        UPDATE books
+        SET status = 'no'
+        WHERE isbn = p_book_id;
+    Else
+        RAISE NOTICE 'At this moment Id: %, Book: %, is not available and cannot be issued!', book_id, book_title;
+    End If;
+End;
+$$;
+
+Call issue_a_book(
+    'IS141'
+    , 'C101'
+    , '978-0-14-118776-1'
+    , 'E102'
+    )
