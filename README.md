@@ -1,19 +1,19 @@
-# Library Management SQL Project
+# 📚 Library Management SQL Project
 
-## Project Overview
+## 🔍 Project Overview
 
-This project is designed to manage and analyze a library’s database using SQL. It covers a range of common database tasks such as querying data, generating reports, managing book rentals, and handling overdue fines. The goal is to demonstrate practical use cases and SQL techniques for managing a library system efficiently.
+This project is designed to manage and analyze a library’s database using SQL. It covers a range of common database tasks such as querying data, generating reports, managing book rentals, and handling overdue fines. The goal is to demonstrate practical use cases and SQL techniques for managing a library system efficiently. 💡✨
 
-## Data Preview
+## 📊 Data Preview
 
 The main tables involved in this project include:
 
-- **Books**: Contains details about each book including title, category, rental price, and availability status.
-- **Issued Status**: Tracks the issuance of books to members.
-- **Members**: Records member information and registration dates.
-- **Employees**: Contains employee and branch information.
-- **Return Status**: Records the return of issued books.
-- **Fines**: Stores fines imposed for overdue books.
+- 📖 **Books**: Contains details about each book including title, category, rental price, and availability status.
+- 📥 **Issued Status**: Tracks the issuance of books to members.
+- 👥 **Members**: Records member information and registration dates.
+- 👔 **Employees**: Contains employee and branch information.
+- 🔄 **Return Status**: Records the return of issued books.
+- 💸 **Fines**: Stores fines imposed for overdue books.
 
 ## Project Tasks and Features
 
